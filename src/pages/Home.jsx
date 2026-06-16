@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import png from '../assets/1.png'
 import ballon1 from '../assets/balloon1.png'
 import ballon2 from '../assets/balloon2.png'
@@ -10,10 +10,20 @@ import { Link } from "react-router";
 import BookCanvas from "../components/BookCanvas";
 import SmallLetter from "../components/SmallLetter";
 import orihime from "../assets/orihime.jpg";
+import bgMusic from '../assets/hb.mp3';
 
 const Home = () => {
     // ------------------- Hooks 
     const [Active, SetActive] = useState(true)
+
+    const audioRef = useRef(null);
+
+    const handleOpenCard = () => {
+        SetActive(!Active);
+        if (audioRef.current) {
+            audioRef.current.play().catch(err => console.log("Браузер заблокировал автоплей:", err));
+        }
+    };
 
     useEffect(() => {
         let datetxt = "17 Июня";
@@ -51,6 +61,7 @@ const Home = () => {
     return (
         <>
             <div id="wrapper">
+                <audio ref={audioRef} src={bgMusic} loop />
                 <div className="flag__birthday">
                     <img src={png} alt="" width="350" className="flag__left" />
                     <img src={png} alt="" width="350" className="flag__right" />
@@ -86,7 +97,7 @@ const Home = () => {
                         </div>
 
                         <div className="btn flex md:gap-2 md:flex-row flex-col">
-                            <button onClick={() => SetActive(!Active)} id="btn__letter">
+                           <button onClick={handleOpenCard} id="btn__letter">
                                 <div className="mail flex items-center justify-center gap-2 md:text-[1rem] text-sm">
                                     <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                                         <path fill="#d13852" d="M63.841 18.646c-.246-3.85-1.072-6.977-3.752-10.198c-5.369-6.439-17.71-7.511-23.23-1.312c-.963.912-1.872 2.01-2.785 3.322l-2.066 2.969l-2.067-2.969c-.916-1.312-1.827-2.411-2.79-3.322C21.627.937 9.287 2.008 3.921 8.448C1.237 11.669.412 14.796.166 18.646C-.184 30.092 8.122 39.257 9.147 40.6c5.637 6.613 11.786 12.866 18.03 18.627c1.13.989 2.106 1.812 3.082 2.628c.587.479 1.166.964 1.749 1.44c.582-.477 1.159-.961 1.743-1.44c.98-.816 1.956-1.639 3.082-2.628c6.247-5.761 12.397-12.01 18.04-18.627c1.025-1.343 9.332-10.508 8.979-21.954" />
